@@ -1,12 +1,9 @@
 // server.js
 const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cors = require('cors');
-const dotenv = require('dotenv');
-const PersonalInfo = require('./models/PersonalInfo');
-
-dotenv.config();
+const bodyParser = require('body-parser');
+const connectDB = require('./config/db');
+const taxSummaryRoutes = require('./routes/taxSummaryRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,27 +12,13 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log('MongoDB connection error:', err));
+// Connect to MongoDB
+connectDB();
 
-// API endpoint to save personal information
-app.post('/api/personal-info', async (req, res) => {
-  const personalInfoData = new PersonalInfo(req.body);
-  
-  try {
-    await personalInfoData.save();
-    res.status(201).send({ message: 'Personal information saved successfully!' });
-  } catch (error) {
-    res.status(500).send({ error: 'Error saving personal information' });
-  }
-});
+// Routes
+app.use('/api/tax-summary', taxSummaryRoutes);
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
