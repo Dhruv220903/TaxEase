@@ -1,0 +1,36 @@
+/* src/IncomeTaxCalculator.css */
+
+.calculator-container {
+    width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .calculator-container h2 {
+    text-align: center;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input[type="radio"] {
+    margin: 0 5px;
+  }
+  
+  button {
+    padding: 5px 15px;
+    margin: 5px 0;
+    cursor: pointer;
+  }
+  
+  
