@@ -1,43 +1,105 @@
-import React from "react";
-import { CalendarIcon, MenuIcon } from "lucide-react";
+import React, { useState } from "react";
+import { CalendarIcon, MenuIcon, XIcon } from "lucide-react"; // Added XIcon for a close button
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header() {
-  const { loginWithRedirect, logout, isAuthenticated,user } = useAuth0();
+  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
-    <header className="bg-indigo-600 border-b-2 black text-white mb-2">
+    <header className="bg-indigo-600 border-b-2 text-white mb-2">
       <div className="container mx-auto px-4 py-6 flex justify-between items-center">
+        {/* Brand and Icon */}
         <div className="flex items-center space-x-4">
-          <CalendarIcon className="h-8 w-8" />
+          <CalendarIcon className="h-8 w-8 text-white" />
           <h1 className="text-2xl font-bold">TaxEase</h1>
         </div>
-        <nav className="hidden md:flex space-x-4">
-          <Link to="/home" className="p-2 hover:scale-125">Home</Link>
-          <Link to="/filetaxes" className="p-2 hover:scale-125">File Taxes</Link>
-          <Link to="/taxcalculator" className="p-2 hover:scale-125">Tax Calculator</Link>
-          <Link to="/aboutus" className="p-2 hover:scale-125">About Us</Link>
-          {isAuthenticated && <div className="p-2 bg-black "><p>{user.name}</p></div>}
-          <div className="bg-black text-white flex items-center full space-x-1 hover:bg-slate-600">
-            <div className="p-2">
-             
-              {isAuthenticated ? (
-                <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-                  Log Out
-                </button>
-              ) : (
-                <button onClick={() => loginWithRedirect()}>Log In</button>
-              )}
+        
+        {/* Navigation for larger screens */}
+        <nav className="hidden md:flex space-x-6">
+          <Link to="/home" className="hover:text-yellow-400 transition">Home</Link>
+          <Link to="/filetaxes" className="hover:text-yellow-400 transition">File Taxes</Link>
+          <Link to="/taxcalculator" className="hover:text-yellow-400 transition">Tax Calculator</Link>
+          <Link to="/aboutus" className="hover:text-yellow-400 transition">About Us</Link>
+          {isAuthenticated && (
+            <div className="p-2 bg-black rounded-md">
+              <p>{user.name}</p>
             </div>
+          )}
+          <div className="p-2 bg-black text-white flex items-center space-x-2 hover:bg-gray-800 transition rounded-md">
+            {isAuthenticated ? (
+              <button
+                onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+              >
+                Log Out
+              </button>
+            ) : (
+              <button onClick={loginWithRedirect}>Log In</button>
+            )}
           </div>
         </nav>
-        <button 
+
+        {/* Mobile Menu Button */}
+        <button
           className="md:hidden p-2 rounded-md bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-white"
           aria-label="Menu"
+          onClick={toggleMobileMenu}
         >
-          <MenuIcon className="h-6 w-6" />
+          {isMobileMenuOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
         </button>
+      </div>
+
+      {/* Mobile Navigation */}
+      <div
+        className={`${
+          isMobileMenuOpen ? "block" : "hidden"
+        } absolute top-0 left-0 w-full h-full bg-indigo-800 text-white flex flex-col items-center justify-center z-10 transition-all ease-in-out duration-300`}
+      >
+        {/* Close Button */}
+        <button
+          className="absolute top-6 right-6 p-2 rounded-md bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-white"
+          aria-label="Close Menu"
+          onClick={toggleMobileMenu}
+        >
+          <XIcon className="h-6 w-6" />
+        </button>
+
+        <Link to="/home" className="p-4 text-xl hover:text-yellow-400" onClick={toggleMobileMenu}>
+          Home
+        </Link>
+        <Link to="/filetaxes" className="p-4 text-xl hover:text-yellow-400" onClick={toggleMobileMenu}>
+          File Taxes
+        </Link>
+        <Link to="/taxcalculator" className="p-4 text-xl hover:text-yellow-400" onClick={toggleMobileMenu}>
+          Tax Calculator
+        </Link>
+        <Link to="/aboutus" className="p-4 text-xl hover:text-yellow-400" onClick={toggleMobileMenu}>
+          About Us
+        </Link>
+        {isAuthenticated && (
+          <div className="p-4 bg-black rounded-md">
+            <p>{user.name}</p>
+          </div>
+        )}
+        <div className="p-4 bg-black text-white flex items-center space-x-2 hover:bg-gray-800 transition rounded-md">
+          {isAuthenticated ? (
+            <button
+              onClick={() => {
+                logout({ logoutParams: { returnTo: window.location.origin } });
+                toggleMobileMenu();
+              }}
+            >
+              Log Out
+            </button>
+          ) : (
+            <button onClick={() => { loginWithRedirect(); toggleMobileMenu(); }}>Log In</button>
+          )}
+        </div>
       </div>
     </header>
   );
