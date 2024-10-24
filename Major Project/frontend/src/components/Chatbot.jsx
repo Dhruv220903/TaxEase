@@ -1,37 +1,41 @@
+// src/Chatbot.js
 import React, { useEffect } from 'react';
-import './Chatbot.css'; // Import custom styles if needed
 
-const ChatbotComponent = () => {
+const Chatbot = () => {
   useEffect(() => {
-    // Create a script element for the chatbot
-    const script = document.createElement('script');
-    script.src = 'https://www.chatbase.co/embed.min.js';
-    script.async = true;
-    script.defer = true;
-    script.setAttribute('chatbotId', 'pDDTbmwiIAsw0cM1oYW-3');
-    script.setAttribute('domain', 'www.chatbase.co');
+    const botpressScript1 = document.createElement('script');
+    botpressScript1.src = 'https://cdn.botpress.cloud/webchat/v2.2/inject.js';
+    botpressScript1.async = true;
+    document.body.appendChild(botpressScript1);
 
-    // Create the embeddedChatbotConfig script
-    const configScript = document.createElement('script');
-    configScript.innerHTML = `
-      window.embeddedChatbotConfig = {
-        chatbotId: "pDDTbmwiIAsw0cM1oYW-3",
-        domain: "www.chatbase.co"
-      };
-    `;
+    const botpressScript2 = document.createElement('script');
+    botpressScript2.src = 'https://files.bpcontent.cloud/2024/10/21/13/20241021134404-RFJ3D9IQ.js';
+    botpressScript2.async = true;
+    document.body.appendChild(botpressScript2);
 
-    // Append both scripts to the document body
-    document.body.appendChild(configScript);
-    document.body.appendChild(script);
-
-    // Clean up the scripts on component unmount
-    return () => {
-      document.body.removeChild(script);
-      document.body.removeChild(configScript);
+    botpressScript1.onload = () => {
+      window.botpressWebChat.init({
+        host: "https://YOUR_BOTPRESS_INSTANCE_URL", // Replace with your Botpress instance URL
+        botId: "YOUR_BOT_ID", // Replace with your Bot ID
+        botName: "My Chatbot", // Customize your bot name
+        style: {
+          // You can customize additional styles here if needed
+        },
+      });
     };
   }, []);
 
-  return <div id="chatbot-container"></div>;
+  return (
+    <div id="chatbot" className="chatbot" style={chatbotStyle}></div>
+  );
 };
 
-export default ChatbotComponent;
+// Chatbot style to position it at the bottom right
+const chatbotStyle = {
+  position: 'fixed',
+  bottom: '20px',      // Distance from the bottom
+  right: '20px',       // Distance from the right
+  zIndex: 1000,        // Ensure it is above other content
+};
+
+export default Chatbot;
