@@ -70,7 +70,11 @@ const Home = () => {
           ))}
         </div>
       </div>
-      
+      <div className='min-w-full min-h-96 bg-gray-50 text-center text-3xl font-semibold text-gray-800 p-12 shadow-' >
+          <h1 className='text-4xl mb-3'>Contact us</h1>
+          <h2 className='text-xl mb-3 text-gray-600 mb-6'>Email ➡️ taxease@gmail.com</h2>
+          <h2 className='text-xl mb-3 text-gray-600 mb-6'>Contact No ➡️ 9999999999</h2>
+      </div>
       
       <Chatbot/>
     </div>
