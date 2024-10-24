@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { CalendarIcon, MenuIcon, XIcon } from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom"; 
+
 export default function Header() {
   const navigate = useNavigate();
   const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
@@ -27,8 +28,8 @@ export default function Header() {
         </div>
 
         {/* Navigation for larger screens */}
-        <nav className="hidden md:flex space-x-6 p-2">
-          <Link to="/home" className="hover:text-yellow-400 transition">
+        <nav className="hidden md:flex items-center space-x-6">
+          <Link to="/home" className="p-2 hover:text-yellow-400 transition">
             Home
           </Link>
           <Link to="/filetaxes" className="hover:text-yellow-400 transition">
@@ -40,22 +41,32 @@ export default function Header() {
           <Link to="/aboutus" className="hover:text-yellow-400 transition">
             About Us
           </Link>
+
+          {/* User info */}
           {isAuthenticated && (
-            <div className="p-2 bg-black rounded-md">
+            <div className="px-4 py-2 bg-black rounded-md text-sm text-white">
               <p>{user.name}</p>
             </div>
           )}
-          <div className="p-2 bg-black text-white flex items-center space-x-2 hover:bg-gray-800 transition rounded-md">
+
+          {/* Login/Logout Button */}
+          <div className="ml-4">
             {isAuthenticated ? (
               <button
                 onClick={() =>
                   logout({ logoutParams: { returnTo: window.location.origin } })
                 }
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 transition"
               >
                 Log Out
               </button>
             ) : (
-              <button onClick={loginWithRedirect}>Log In</button>
+              <button
+                onClick={loginWithRedirect}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 transition"
+              >
+                Log In
+              </button>
             )}
           </div>
         </nav>
@@ -98,22 +109,32 @@ export default function Header() {
         <button onClick={() => handleNavigation("/aboutus")} className="p-4 text-xl hover:text-yellow-400">
           About Us
         </button>
+
+        {/* User info */}
         {isAuthenticated && (
           <div className="p-4 bg-black rounded-md">
             <p>{user.name}</p>
           </div>
         )}
-        <div className="p-4 bg-black text-white flex items-center space-x-2 hover:bg-gray-800 transition rounded-md">
+
+        {/* Login/Logout Button */}
+        <div className="mt-4">
           {isAuthenticated ? (
             <button
               onClick={() =>
                 logout({ logoutParams: { returnTo: window.location.origin } })
               }
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 transition"
             >
               Log Out
             </button>
           ) : (
-            <button onClick={loginWithRedirect}>Log In</button>
+            <button
+              onClick={loginWithRedirect}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 transition"
+            >
+              Log In
+            </button>
           )}
         </div>
       </div>
