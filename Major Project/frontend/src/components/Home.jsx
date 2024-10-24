@@ -18,9 +18,9 @@ const about = {
       info: 'Our Very Advance chatbot makes it very easy to gain knowledge about taxes',
       
     },
-    CMO: {
-      name: 'Sourabh Patil',
-      info: 'Extremely smart and talented individual',
+    TaxAlerts: {
+      name: 'Tax Alerts',
+      info: 'Receive information about changes in the taxation system',
     
     },
   },
