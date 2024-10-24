@@ -1,43 +1,10 @@
 import React, { useState } from 'react';
-const loginUser = async (email, password) => {
-  try {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-      // Redirect to dashboard or another page
-    }
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const registerUser = async (name, email, password) => {
-  try {
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
-    });
-    const data = await res.json();
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-      // Redirect to dashboard or another page
-    }
-  } catch (err) {
-    console.error(err);
-  }
-};
-
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 const LoginSignupPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
-
+  const { loginWithRedirect } = useAuth0();
   const switchMode = () => {
     setIsLoginMode(!isLoginMode);
   };
@@ -146,13 +113,7 @@ const LoginSignupPage = () => {
 
             <p className="text-sm text-gray-600 text-center mt-4">
               Already have an account?{' '}
-              <button
-                type="button"
-                onClick={switchMode}
-                className="text-green-600 font-semibold hover:underline"
-              >
-                Login
-              </button>
+              return <button onClick={() => loginWithRedirect()}>Log In</button>;
             </p>
           </form>
         )}
