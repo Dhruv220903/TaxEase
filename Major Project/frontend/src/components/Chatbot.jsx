@@ -2,34 +2,29 @@ import React, { useEffect } from 'react';
 
 const Chatbot = () => {
   useEffect(() => {
-    const botpressScript = document.createElement('script');
-    botpressScript.src = 'https://cdn.botpress.cloud/webchat/v2.2/inject.js';
-    botpressScript.async = true;
-    document.body.appendChild(botpressScript);
+    // Dynamically creating the script for embedding the Chatling chatbot
+    const script = document.createElement('script');
+    script.src = "https://chatling.ai/js/embed.js";
+    script.async = true;
+    script.id = "chatling-embed-script";
+    script.setAttribute('data-id', '5866982513');
+    document.body.appendChild(script);
 
-    botpressScript.onload = () => {
-      window.botpressWebChat.init({
-        host: "https://YOUR_INSTANCE_NAME.botpress.cloud", // Replace with your actual Botpress instance URL
-        botId: "TaxMaster", // Make sure this is the correct bot ID
-        botName: "TaxMaster", // Customize your bot name
-        style: {
-          // Additional style customization can go here if needed
-        },
-      });
+    // Creating the chatbot config script
+    const configScript = document.createElement('script');
+    configScript.innerHTML = `
+      window.chtlConfig = { chatbotId: "5866982513" };
+    `;
+    document.body.appendChild(configScript);
+
+    // Cleanup on component unmount
+    return () => {
+      document.body.removeChild(script);
+      document.body.removeChild(configScript);
     };
   }, []);
 
-  return (
-    <div id="chatbot" className="chatbot" style={chatbotStyle}></div>
-  );
-};
-
-// Chatbot style to position it at the bottom right
-const chatbotStyle = {
-  position: 'fixed',
-  bottom: '20px',
-  right: '20px',
-  zIndex: 1000,
+  return null; // No need to render anything, the script injects the chatbot
 };
 
 export default Chatbot;
