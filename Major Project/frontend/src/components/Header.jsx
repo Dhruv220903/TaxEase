@@ -41,7 +41,7 @@ export default function Header() {
           <Link to="/aboutus" className="hover:text-yellow-400 transition">
             About Us
           </Link>
-
+       
           {/* User info */}
           {isAuthenticated && (
             <div className="px-4 py-2 bg-black rounded-md text-sm text-white">

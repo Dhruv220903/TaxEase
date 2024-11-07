@@ -17,6 +17,7 @@ import TermsOfService from './components/TermsofService';
 import Blog from './components/Blog';
 import TaxGuide from './components/TaxGuide';
 import Chatbot from './components/Chatbot';
+
 function Layout({ children }) {
     const location = useLocation();
     const hideHeaderFooter = location.pathname === '/login';
@@ -50,10 +51,11 @@ function App() {
                     <Route path="/termsofservice" element={< TermsOfService/>} />
                     <Route path="/taxguide" element={< TaxGuide/>} />
                     <Route path="/blog" element={< Blog/>} />
+                   
 
 
                 </Routes>
-                <Chatbot />
+                
             </Layout>
         </Router>
     );
