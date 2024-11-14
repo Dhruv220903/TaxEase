@@ -1,26 +1,27 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const authRoutes = require('./routes/auth');
-require('dotenv').config();
+import express from "express";
+import dotenv from "dotenv";
+import { dbConnection } from "./src/config/Db.js";
+import cors from "cors";
+import userRoutes from "./src/routes/UserRoutes.js";
+import incomeRoutes from "./src/routes/incomeRoutes.js";
+import taxRoutes from "./src/routes/taxRoutes.js";
 
 const app = express();
 
-// Body parser middleware
-app.use(bodyParser.json());
+dotenv.config();
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.log(err));
+dbConnection();
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use("/uploads", express.static("./public/uploads"));
 
-// Routes
-app.use('/api/auth', authRoutes);
+app.use("/api", userRoutes);
+app.use("/api", incomeRoutes);
+app.use("/api", taxRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
+
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is listening on port ${PORT}`);
 });
