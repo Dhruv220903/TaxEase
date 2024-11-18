@@ -49,10 +49,10 @@ const TaxSavings = () => {
             ifscCode,
         };
 
-        // Here you can perform further processing with taxSavingsData
+        // Perform further processing with taxSavingsData
         console.log(taxSavingsData);
 
-        // Navigate to the Tax Summary or any other page
+        // Send data to the backend or navigate
         navigate('/tax-summary', { state: { taxSavingsData } });
     };
 
@@ -251,7 +251,7 @@ const TaxSavings = () => {
 
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">
-                        Contribution amount paid via non-cash
+                        Non-Cash Contribution
                     </label>
                     <input
                         type="text"
@@ -264,7 +264,7 @@ const TaxSavings = () => {
 
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">
-                        Contribution Date*
+                        Contribution Date
                     </label>
                     <input
                         type="date"
@@ -274,11 +274,9 @@ const TaxSavings = () => {
                     />
                 </div>
 
-                {/* Transaction Details */}
-                <h3 className="text-lg font-bold mb-2">Transactional Details</h3>
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">
-                        Transaction Ref No.
+                        Transaction Reference No.
                     </label>
                     <input
                         type="text"
@@ -291,7 +289,7 @@ const TaxSavings = () => {
 
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">
-                        IFSC Code of Bank
+                        IFSC Code
                     </label>
                     <input
                         type="text"
@@ -302,19 +300,11 @@ const TaxSavings = () => {
                     />
                 </div>
 
-                {/* TDS and other details */}
-                <h3 className="text-lg font-bold mb-2">Taxes Paid, TDS and TCS</h3>
-                <p className="mb-4">
-                    TDS or TCS Payments, Payments for Advance Taxes or Tax due and others. You can also Upload Form 26AS to fetch these details.
-                </p>
-
-                {/* Carry Forward Loss, AIS & Other Information */}
-                <h3 className="text-lg font-bold mb-2">Carry Forward Loss, AIS & Other Information</h3>
-                <p className="mb-4">
-                    Other less popular details like Carry Forward of Losses, Foreign Assets, Directorship etc.
-                </p>
-
-                <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+                {/* Submit Button */}
+                <button
+                    type="submit"
+                    className="bg-blue-500 text-white py-2 px-4 rounded"
+                >
                     Submit
                 </button>
             </form>

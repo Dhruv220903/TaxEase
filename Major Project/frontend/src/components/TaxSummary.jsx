@@ -1,10 +1,35 @@
 // src/components/TaxSummary.jsx
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const TaxSummary = () => {
+    const [taxSummary, setTaxSummary] = useState(null);
     const location = useLocation();
-    const { taxSummary } = location.state || {};
+    const navigate = useNavigate();
+    
+    // Fetch tax summary on component mount
+    useEffect(() => {
+        const fetchTaxSummary = async () => {
+            const email = location.state?.email; // Make sure the email is passed from previous page (e.g., after login)
+            if (email) {
+                try {
+                    const response = await fetch(`/api/tax-summary/${email}`);
+                    const data = await response.json();
+                    setTaxSummary(data);
+                } catch (error) {
+                    console.error('Error fetching tax summary:', error);
+                }
+            } else {
+                navigate('/login'); // If no email is found, redirect to login
+            }
+        };
+
+        fetchTaxSummary();
+    }, [location.state, navigate]);
+
+    if (!taxSummary) {
+        return <p>Loading...</p>;
+    }
 
     return (
         <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">

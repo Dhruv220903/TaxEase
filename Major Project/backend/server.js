@@ -19,7 +19,7 @@ mongoose
 // Routes
 const personalInfoRoutes = require("./routes/personalInfoRoutes");
 app.use("/api/user", personalInfoRoutes);
-
+app.use("/api", taxSummaryRoutes);
 // Start Server
 const PORT = process.env.PORT || 3085;
 app.listen(PORT, () => {
