@@ -1,29 +1,20 @@
 {
-  "name": "chat_backend",
+  "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon Server.js"
+    "start": "node server.js"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@openai/realtime-api-beta": "github:openai/openai-realtime-api-beta",
-    "axios": "^1.7.7",
-    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "google-auth-library": "^9.14.1",
-    "http-status-codes": "^2.3.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.3.4",
-    "multer": "^1.4.5-lts.1",
-    "node-fetch": "^3.3.2",
-    "nodemon": "^3.1.0",
-    "socket.io": "^4.7.5"
+    "express": "^4.21.1",
+    "mongoose": "^8.8.1"
   }
 }

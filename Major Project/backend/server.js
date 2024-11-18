@@ -1,27 +1,27 @@
-import express from "express";
-import dotenv from "dotenv";
-import { dbConnection } from "./src/config/Db.js";
-import cors from "cors";
-import userRoutes from "./src/routes/UserRoutes.js";
-import incomeRoutes from "./src/routes/incomeRoutes.js";
-import taxRoutes from "./src/routes/taxRoutes.js";
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+require("dotenv").config();
 
+// Initialize App
 const app = express();
-
-dotenv.config();
-
-dbConnection();
 app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use("/uploads", express.static("./public/uploads"));
+app.use(bodyParser.json());
 
-app.use("/api", userRoutes);
-app.use("/api", incomeRoutes);
-app.use("/api", taxRoutes);
+// Connect to MongoDB
+const MONGO_URI = process.env.MONGO_URI; // Get URI from .env
+mongoose
+    .connect(MONGO_URI)
+    .then(() => console.log("Connected to MongoDB"))
+    .catch((err) => console.error("MongoDB connection error:", err));
 
-const PORT = process.env.PORT;
+// Routes
+const personalInfoRoutes = require("./routes/personalInfoRoutes");
+app.use("/api/user", personalInfoRoutes);
 
+// Start Server
+const PORT = process.env.PORT || 3085;
 app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
