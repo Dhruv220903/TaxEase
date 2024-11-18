@@ -1,99 +1,130 @@
-// src/components/TaxSummary.jsx
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TaxSummary = () => {
-    const [taxSummary, setTaxSummary] = useState(null);
-    const location = useLocation();
-    const navigate = useNavigate();
-    
-    // Fetch tax summary on component mount
-    useEffect(() => {
-        const fetchTaxSummary = async () => {
-            const email = location.state?.email; // Make sure the email is passed from previous page (e.g., after login)
-            if (email) {
-                try {
-                    const response = await fetch(`/api/tax-summary/${email}`);
-                    const data = await response.json();
-                    setTaxSummary(data);
-                } catch (error) {
-                    console.error('Error fetching tax summary:', error);
-                }
-            } else {
-                navigate('/login'); // If no email is found, redirect to login
-            }
-        };
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [taxSummary, setTaxSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-        fetchTaxSummary();
-    }, [location.state, navigate]);
-
-    if (!taxSummary) {
-        return <p>Loading...</p>;
+  // Fetch tax summary from backend
+  const fetchTaxSummary = async () => {
+    const email = location.state?.email; // Email passed via navigation state
+    if (!email) {
+      setError("Email not provided. Redirecting to login...");
+      setTimeout(() => navigate("/login"), 3000); // Redirect to login after delay
+      return;
     }
 
-    return (
-        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">Your Tax Summary</h2>
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold">Gross Income</h3>
-                <p>₹ {taxSummary?.grossIncome || '0'}</p>
-            </div>
+    try {
+      const response = await fetch(`/api/tax-summary/${email}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch tax summary. Please try again.");
+      }
+      const data = await response.json();
+      setTaxSummary(data);
+    } catch (err) {
+      console.error("Error fetching tax summary:", err);
+      setError("Failed to fetch tax summary. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold">Taxable Income</h3>
-                <p>₹ {taxSummary?.taxableIncome || '0'}</p>
-            </div>
+  useEffect(() => {
+    fetchTaxSummary();
+  }, []);
 
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold">Tax Liability</h3>
-                <p>₹ {taxSummary?.taxLiability || '0'}</p>
-            </div>
+  if (loading) {
+    return <div className="text-center mt-20 text-xl">Loading your tax summary...</div>;
+  }
 
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold">Taxes Paid</h3>
-                <p>₹ {taxSummary?.taxesPaid || '0'}</p>
-            </div>
+  if (error) {
+    return <div className="text-center mt-20 text-red-500 text-xl">{error}</div>;
+  }
 
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold">You have selected {taxSummary?.selectedRegime}</h3>
-            </div>
+  // Default data structure to avoid undefined errors
+  const {
+    grossIncome = 0,
+    taxableIncome = 0,
+    taxLiability = 0,
+    taxesPaid = 0,
+    selectedRegime = "Not specified",
+    userDetails = {},
+  } = taxSummary || {};
 
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold">Compare Regimes</h3>
-                <p>As per Income Tax Dept., you cannot file a Belated Return under Old Regime.</p>
-            </div>
+  const { firstName = "", lastName = "", dateOfBirth = "N/A", pan = "N/A" } = userDetails;
 
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold">Optimise your tax and Double-check your important data</h3>
-                <p>Home Loan Interest Claimed: ₹ 0 (Max Limit: ₹ 200000)</p>
-            </div>
+  return (
+    <div className="max-w-3xl mx-auto bg-gray-50 p-6 rounded-lg shadow-lg mt-10">
+      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Your Tax Summary</h1>
 
-            <h3 className="text-lg font-semibold">YOUR TAX BREAK-UP</h3>
-            <div className="mb-4">
-                <h4 className="text-md font-semibold">Personal Information</h4>
-                <p>Name: {/* Add name */}</p>
-                <p>Date of birth: {/* Add DOB */}</p>
-                <p>PAN: {/* Add PAN */}</p>
-                <p>Assessment Year: 2024 - 2025</p>
-                <p>ITR Type: ITR1</p>
-                <p>Residential Status: Resident</p>
-            </div>
+      {/* Gross Income */}
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Gross Income</h2>
+        <p className="text-gray-600">₹ {grossIncome}</p>
+      </div>
 
-            <div className="mb-4">
-                <h4 className="text-md font-semibold">Income Sources</h4>
-                <p>Gross Total Income: ₹ {taxSummary?.grossIncome || '0'}</p>
-                <p>Tax Savings (Deductions): Total Deduction: ₹ 0</p>
-            </div>
+      {/* Taxable Income */}
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Taxable Income</h2>
+        <p className="text-gray-600">₹ {taxableIncome}</p>
+      </div>
 
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold">Tax Payable</h3>
-                <p>Total Taxable Income: ₹ {taxSummary?.grossIncome || '0'}</p>
-                <p>Total Tax: ₹ {taxSummary?.taxLiability || '0'}</p>
-                <p>Total Tax Payable: ₹ {taxSummary?.taxLiability || '0'}</p>
-                <p>Total Tax Paid: ₹ {taxSummary?.taxesPaid || '0'}</p>
-            </div>
+      {/* Tax Liability */}
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Tax Liability</h2>
+        <p className="text-gray-600">₹ {taxLiability}</p>
+      </div>
+
+      {/* Taxes Paid */}
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Taxes Paid</h2>
+        <p className="text-gray-600">₹ {taxesPaid}</p>
+      </div>
+
+      {/* Selected Regime */}
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Selected Regime</h2>
+        <p className="text-gray-600">{selectedRegime}</p>
+      </div>
+
+      {/* Tax Breakup */}
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Tax Break-Up</h2>
+        <div className="mt-2">
+          <p className="text-gray-600">Name: {`${firstName} ${lastName}`}</p>
+          <p className="text-gray-600">Date of Birth: {dateOfBirth}</p>
+          <p className="text-gray-600">PAN: {pan}</p>
+          <p className="text-gray-600">Assessment Year: 2024-2025</p>
         </div>
-    );
+      </div>
+
+      {/* Compare Regimes */}
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Compare Regimes</h2>
+        <p className="text-gray-600">
+          According to the Income Tax Department, filing a belated return under the Old Regime may not be allowed.
+        </p>
+      </div>
+
+      {/* Optimization Tips */}
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">Optimize Your Tax</h2>
+        <p className="text-gray-600">Home Loan Interest Claimed: ₹ 0 (Max Limit: ₹ 200,000)</p>
+      </div>
+
+      {/* Summary Section */}
+      <h2 className="text-lg font-semibold text-gray-700 mt-6">Tax Payable</h2>
+      <div className="mt-2">
+        <p className="text-gray-600">Total Taxable Income: ₹ {taxableIncome}</p>
+        <p className="text-gray-600">Total Tax: ₹ {taxLiability}</p>
+        <p className="text-gray-600">Total Tax Paid: ₹ {taxesPaid}</p>
+        <p className="text-gray-600">Net Tax Payable: ₹ {taxLiability - taxesPaid}</p>
+      </div>
+    </div>
+  );
 };
 
 export default TaxSummary;
